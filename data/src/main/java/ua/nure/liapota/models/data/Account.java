@@ -7,11 +7,13 @@ import javax.persistence.*;
 public class Account {
     @Id
     @Column(name = "code")
-    private String id;
+    private String code;
     private String description;
     private String source;
     private char type;
+    @Column(name = "facility_id")
     private int facilityId;
+    @Column(name = "added_by")
     private String addedBy;
 
     public String getDescription() {
@@ -46,12 +48,12 @@ public class Account {
         this.addedBy = addedBy;
     }
 
-    public String getId() {
-        return id;
+    public String getCode() {
+        return code;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getSource() {
