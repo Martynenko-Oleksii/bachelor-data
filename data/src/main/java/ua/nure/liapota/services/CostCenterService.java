@@ -3,7 +3,7 @@ package ua.nure.liapota.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.nure.liapota.models.data.CostCenter;
-import ua.nure.liapota.repositories.CostCenterRepository;
+import ua.nure.liapota.repositories.data.CostCenterRepository;
 
 @Service
 public class CostCenterService extends EntityService<CostCenter, String, CostCenterRepository> {

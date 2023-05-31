@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import ua.nure.liapota.models.data.CostCenter;
 import ua.nure.liapota.services.CostCenterService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/costCenters")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -14,6 +16,11 @@ public class CostCenterController {
 
     public CostCenterController(CostCenterService service){
         this.service = service;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CostCenter>> getAll() {
+        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 
     @PostMapping
