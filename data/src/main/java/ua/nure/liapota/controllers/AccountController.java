@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/accounts")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AccountController {
     private final AccountService service;
 

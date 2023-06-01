@@ -18,9 +18,9 @@ public class CostCenterController {
         this.service = service;
     }
 
-    @GetMapping
-    public ResponseEntity<List<CostCenter>> getAll() {
-        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<List<CostCenter>> getAll(@PathVariable Integer id) {
+        return new ResponseEntity<>(service.getByFacility(id), HttpStatus.OK);
     }
 
     @PostMapping
