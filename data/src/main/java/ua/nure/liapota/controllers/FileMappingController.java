@@ -20,9 +20,9 @@ public class FileMappingController {
         this.service = service;
     }
 
-    @GetMapping
-    public ResponseEntity<List<FileMapping>> getAll() {
-        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<List<FileMapping>> getAll(@PathVariable Integer id) {
+        return new ResponseEntity<>(service.getByCreatedUnder(id), HttpStatus.OK);
     }
 
     @PostMapping

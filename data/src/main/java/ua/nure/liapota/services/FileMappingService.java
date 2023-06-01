@@ -1,16 +1,21 @@
 package ua.nure.liapota.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import ua.nure.liapota.models.file.FileMapping;
 import ua.nure.liapota.repositories.file.FileMappingRepository;
 
+import java.util.List;
+
 @Service
-public class FileMappingService extends EntityService<FileMapping, Integer, CrudRepository<FileMapping, Integer>> {
+public class FileMappingService extends EntityService<FileMapping, Integer, FileMappingRepository> {
     @Autowired
     public FileMappingService(FileMappingRepository repository) {
         this.repository = repository;
+    }
+
+    public List<FileMapping> getByCreatedUnder(Integer id) {
+        return repository.getFileMappingsByCreatedUnder(id);
     }
 
     public void update(FileMapping updatedFileMapping) {
