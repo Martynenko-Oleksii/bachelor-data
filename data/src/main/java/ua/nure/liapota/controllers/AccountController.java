@@ -20,9 +20,9 @@ public class AccountController {
         this.service = service;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Account>> getAll() {
-        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<List<Account>> getAll(@PathVariable Integer id) {
+        return new ResponseEntity<>(service.getByFacilityId(id), HttpStatus.OK);
     }
 
     @PostMapping
