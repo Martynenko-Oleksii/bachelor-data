@@ -1,5 +1,7 @@
 package ua.nure.liapota.models.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -20,8 +22,17 @@ public class Department {
     @Column(name = "created_by")
     private String createdBy;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "department")
     private Set<CostCenter> costCenters;
+
+    public Set<CostCenter> getCostCenters() {
+        return costCenters;
+    }
+
+    public void setCostCenters(Set<CostCenter> costCenters) {
+        this.costCenters = costCenters;
+    }
 
     public int getId() {
         return id;

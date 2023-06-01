@@ -1,7 +1,5 @@
 package ua.nure.liapota.models.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 
 @Entity
@@ -16,7 +14,6 @@ public class CostCenter {
     @Column(name = "added_by")
     private String addedBy;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;

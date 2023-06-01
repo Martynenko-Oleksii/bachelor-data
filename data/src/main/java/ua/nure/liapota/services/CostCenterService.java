@@ -3,6 +3,7 @@ package ua.nure.liapota.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.nure.liapota.models.data.CostCenter;
+import ua.nure.liapota.models.util.Confirm;
 import ua.nure.liapota.repositories.data.CostCenterRepository;
 
 import java.util.List;
@@ -23,6 +24,15 @@ public class CostCenterService extends EntityService<CostCenter, String, CostCen
         savedCostCenter.setAddedBy(updatedCostCenter.getAddedBy());
         savedCostCenter.setDescription(updatedCostCenter.getDescription());
         savedCostCenter.setFacilityID(updatedCostCenter.getFacilityID());
+        savedCostCenter.setDepartment(updatedCostCenter.getDepartment());
         repository.save(savedCostCenter);
+    }
+
+    public Confirm getConfirm(Integer id) {
+        Confirm confirm = new Confirm();
+        List<CostCenter> unmapped = repository.getCostCentersMapping(id);
+        confirm.setUnmapped(unmapped);
+        confirm.setCompleted(unmapped.size() == 0);
+        return confirm;
     }
 }
