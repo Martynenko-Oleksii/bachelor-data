@@ -1,5 +1,7 @@
 package ua.nure.liapota.models.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -18,6 +20,7 @@ public class TimePeriod {
     @Column(name = "end_date")
     private Date endDate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "timePeriod")
     private Set<TimePeriodFacility> timePeriodFacilitySet;
 

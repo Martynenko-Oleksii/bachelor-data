@@ -1,5 +1,7 @@
 package ua.nure.liapota.models.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -13,6 +15,7 @@ public class TimePeriodFacility {
     private String status;
     private int facilityId;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "timePeriodFacility")
     private Set<Value> values;
 

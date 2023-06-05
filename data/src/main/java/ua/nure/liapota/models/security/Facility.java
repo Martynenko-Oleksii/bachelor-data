@@ -1,6 +1,9 @@
 package ua.nure.liapota.models.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "facilities")
@@ -9,6 +12,10 @@ public class Facility {
     @Column(name = "facility_id")
     private int id;
     private String name;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "facilities")
+    private Set<FacilityGroup> facilityGroups;
 
     public int getId() {
         return id;
