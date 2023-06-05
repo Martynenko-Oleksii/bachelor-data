@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.nure.liapota.annotations.Authorize;
 import ua.nure.liapota.models.data.Department;
 import ua.nure.liapota.models.util.Confirm;
 import ua.nure.liapota.services.CostCenterService;
@@ -11,6 +12,7 @@ import ua.nure.liapota.services.DepartmentService;
 
 import java.util.List;
 
+@Authorize("data,cc-mapping")
 @RestController
 @RequestMapping("/CCMapping")
 @CrossOrigin(origins = "http://localhost:4200")
