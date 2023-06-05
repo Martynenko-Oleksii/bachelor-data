@@ -21,6 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/dataLoad")
+@CrossOrigin(origins = "http://localhost:4200")
 public class UploadDataController {
     private final FileService fileService;
     private final UploadLogService uploadLogService;

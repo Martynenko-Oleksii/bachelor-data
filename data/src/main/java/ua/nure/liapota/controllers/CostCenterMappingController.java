@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/CCMapping")
+@CrossOrigin(origins = "http://localhost:4200")
 public class CostCenterMappingController {
     private final DepartmentService departmentService;
     private final CostCenterService costCenterService;
