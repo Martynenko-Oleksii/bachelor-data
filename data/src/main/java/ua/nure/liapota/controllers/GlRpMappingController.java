@@ -28,4 +28,6 @@ public class GlRpMappingController {
     public ResponseEntity<List<ValueTypeEntity>> getAccountTypes() {
         return new ResponseEntity<>(valueTypeService.getAll(), HttpStatus.OK);
     }
+
+
 }

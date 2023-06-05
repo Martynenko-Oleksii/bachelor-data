@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ua.nure.liapota.models.data.TimePeriodFacility;
 import ua.nure.liapota.repositories.data.TimePeriodFacilityRepository;
 
+import java.util.List;
+
 @Service
 public class TimePeriodFacilityService extends EntityService<TimePeriodFacility, Integer, TimePeriodFacilityRepository> {
     @Autowired
@@ -12,7 +14,7 @@ public class TimePeriodFacilityService extends EntityService<TimePeriodFacility,
         this.repository = repository;
     }
 
-    public TimePeriodFacility getTimePeriodByFacilityId(Integer id) {
+    public List<TimePeriodFacility> getTimePeriodByFacilityId(Integer id) {
         return repository.getTimePeriodByFacilityId(id);
     }
 }

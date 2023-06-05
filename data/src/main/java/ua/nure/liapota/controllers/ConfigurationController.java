@@ -12,6 +12,7 @@ import ua.nure.liapota.services.TimePeriodService;
 import ua.nure.liapota.services.UserCustomerService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Set;
 
 @Authorize("data,data-configuration")
@@ -38,16 +39,28 @@ public class ConfigurationController {
     }
 
     @GetMapping("/currentTimePeriod/{id}")
-    public ResponseEntity<TimePeriodFacility> getCurrentTimePeriod(@PathVariable Integer id) {
-        TimePeriodFacility timePeriodFacility = timePeriodFacilityService.getTimePeriodByFacilityId(id);
+    public ResponseEntity<List<TimePeriodFacility>> getCurrentTimePeriod(@PathVariable Integer id) {
+        List<TimePeriodFacility> timePeriodFacilities = timePeriodFacilityService.getTimePeriodByFacilityId(id);
 
-        if (timePeriodFacility == null) {
-            timePeriodFacility = new TimePeriodFacility();
+        if (!haveCurrent(timePeriodFacilities)) {
+            TimePeriodFacility timePeriodFacility = new TimePeriodFacility();
             timePeriodFacility.setTimePeriod(timePeriodService.getCurrent());
             timePeriodFacility.setFacilityId(id);
             timePeriodFacility.setStatus("Opened");
+            timePeriodFacilityService.create(timePeriodFacility);
+            timePeriodFacilities.add(timePeriodFacility);
         }
 
-        return new ResponseEntity<>(timePeriodFacilityService.create(timePeriodFacility), HttpStatus.OK);
+        return new ResponseEntity<>(timePeriodFacilities, HttpStatus.OK);
+    }
+
+    private boolean haveCurrent(List<TimePeriodFacility> timePeriodFacilities) {
+        int currentTimePeriodId = timePeriodService.getCurrent().getId();
+        for (TimePeriodFacility t : timePeriodFacilities) {
+            if (t.getTimePeriod().getId() == currentTimePeriodId) {
+                return true;
+            }
+        }
+        return false;
     }
 }
