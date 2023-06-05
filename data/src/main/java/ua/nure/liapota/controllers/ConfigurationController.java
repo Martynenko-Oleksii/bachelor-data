@@ -37,7 +37,7 @@ public class ConfigurationController {
         return new ResponseEntity<>(user.getFacilityGroup().getFacilities(), HttpStatus.OK);
     }
 
-    @GetMapping("/currentTimePeriod{id}")
+    @GetMapping("/currentTimePeriod/{id}")
     public ResponseEntity<TimePeriodFacility> getCurrentTimePeriod(@PathVariable Integer id) {
         TimePeriodFacility timePeriodFacility = timePeriodFacilityService.getTimePeriodByFacilityId(id);
 
