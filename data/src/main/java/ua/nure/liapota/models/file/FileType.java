@@ -34,11 +34,23 @@ public class FileType {
     @OneToMany(mappedBy = "fileType")
     private Set<FileMapping> fileMappings;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "fileType")
+    private Set<UploadLog> uploadLogs;
+
     public Set<FileMapping> getFileMappings() {
         return fileMappings;
     }
 
     public void setFileMappings(Set<FileMapping> fileMappings) {
         this.fileMappings = fileMappings;
+    }
+
+    public Set<UploadLog> getUploadLogs() {
+        return uploadLogs;
+    }
+
+    public void setUploadLogs(Set<UploadLog> uploadLogs) {
+        this.uploadLogs = uploadLogs;
     }
 }
