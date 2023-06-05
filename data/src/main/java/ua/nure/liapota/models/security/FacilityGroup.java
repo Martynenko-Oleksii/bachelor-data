@@ -16,7 +16,7 @@ public class FacilityGroup {
     @Column(name = "customer_id")
     private int customerId;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "facilities_facility_groups",
             joinColumns = @JoinColumn(name = "facility_group_id"),
