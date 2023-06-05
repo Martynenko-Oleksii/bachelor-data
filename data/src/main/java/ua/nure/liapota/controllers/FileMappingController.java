@@ -8,6 +8,7 @@ import ua.nure.liapota.annotations.Authorize;
 import ua.nure.liapota.models.file.FileMapping;
 import ua.nure.liapota.services.FileMappingService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Authorize("data,data-configuration")
@@ -22,9 +23,10 @@ public class FileMappingController {
         this.service = service;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<FileMapping>> getAll(@PathVariable Integer id) {
-        return new ResponseEntity<>(service.getByCreatedUnder(id), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<FileMapping>> getAll(HttpServletRequest request) {
+        return new ResponseEntity<>(service.getByCreatedUnder((Integer) request.getAttribute("customerId")),
+                HttpStatus.OK);
     }
 
     @PostMapping
