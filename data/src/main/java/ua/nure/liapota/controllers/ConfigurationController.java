@@ -35,14 +35,14 @@ public class ConfigurationController {
         return new ResponseEntity<>(user.getFacilityGroup().getFacilities(), HttpStatus.OK);
     }
 
-    @GetMapping("/currentTimePeriod")
-    public ResponseEntity<TimePeriodFacility> getCurrentTimePeriod(@RequestBody Facility facility) {
-        TimePeriodFacility timePeriodFacility = timePeriodFacilityService.getTimePeriodByFacilityId(facility.getId());
+    @GetMapping("/currentTimePeriod{id}")
+    public ResponseEntity<TimePeriodFacility> getCurrentTimePeriod(@PathVariable Integer id) {
+        TimePeriodFacility timePeriodFacility = timePeriodFacilityService.getTimePeriodByFacilityId(id);
 
         if (timePeriodFacility == null) {
             timePeriodFacility = new TimePeriodFacility();
             timePeriodFacility.setTimePeriod(timePeriodService.getCurrent());
-            timePeriodFacility.setFacilityId(facility.getId());
+            timePeriodFacility.setFacilityId(id);
             timePeriodFacility.setStatus("Opened");
         }
 
