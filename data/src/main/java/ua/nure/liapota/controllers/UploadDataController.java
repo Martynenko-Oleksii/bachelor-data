@@ -32,6 +32,8 @@ public class UploadDataController {
     private final AccountService accountService;
     private final CustomerService customerService;
     private final FacilityService facilityService;
+    private final TimePeriodFacilityService timePeriodService;
+    private final FileMappingService fileMappingService;
     private String[][] fileToArray;
     private FileEntity fileEntity;
     private TimePeriodFacility timePeriod;
@@ -44,7 +46,9 @@ public class UploadDataController {
                                 CostCenterService costCenterService,
                                 AccountService accountService,
                                 CustomerService customerService,
-                                FacilityService facilityService) {
+                                FacilityService facilityService,
+                                TimePeriodFacilityService timePeriodService,
+                                FileMappingService fileMappingService) {
         this.fileService = fileService;
         this.uploadLogService = uploadLogService;
         this.dataLoadService = dataLoadService;
@@ -52,18 +56,27 @@ public class UploadDataController {
         this.accountService = accountService;
         this.customerService = customerService;
         this.facilityService = facilityService;
+        this.timePeriodService = timePeriodService;
+        this.fileMappingService = fileMappingService;
     }
 
     @PostMapping
     public ResponseEntity<List<ErrorMessages>> upload(@RequestParam(name = "file") MultipartFile file,
-                                               @RequestParam(name = "fileData") FileEntity fileEntity,
-                                               @RequestParam(name = "timePeriod")TimePeriodFacility timePeriod,
+                                               @RequestParam(name = "delimiter") Integer delimiter,
+                                               @RequestParam(name = "mappingId")Integer mappingId,
+                                               @RequestParam(name = "timePeriodId")Integer timePeriodId,
                                                @RequestParam(name = "dataSet") String dataSet,
                                                HttpServletRequest request)
             throws JsonProcessingException {
-        this.timePeriod = timePeriod;
+        this.timePeriod = timePeriodService.getById(timePeriodId);
         this.userId = (String) request.getAttribute("userId");
-        this.fileEntity = fileEntity;
+        this.fileEntity = new FileEntity();
+        fileEntity.setFileMapping(fileMappingService.getById(mappingId));
+        if (delimiter == 1) {
+            fileEntity.setColumnDelimiter(',');
+        } else if (delimiter == 2) {
+            fileEntity.setColumnDelimiter(';');
+        }
 
         try {
             fileService.uploadFile(file,

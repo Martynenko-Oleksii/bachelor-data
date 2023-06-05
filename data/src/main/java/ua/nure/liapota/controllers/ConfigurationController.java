@@ -48,6 +48,6 @@ public class ConfigurationController {
             timePeriodFacility.setStatus("Opened");
         }
 
-        return new ResponseEntity<>(timePeriodFacility, HttpStatus.OK);
+        return new ResponseEntity<>(timePeriodFacilityService.create(timePeriodFacility), HttpStatus.OK);
     }
 }
