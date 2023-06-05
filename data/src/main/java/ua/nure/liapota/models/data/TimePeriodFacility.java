@@ -13,6 +13,7 @@ public class TimePeriodFacility {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String status;
+    @Column(name = "facility_id")
     private int facilityId;
 
     @JsonIgnore
