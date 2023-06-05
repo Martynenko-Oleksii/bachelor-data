@@ -17,10 +17,9 @@ import javax.sql.DataSource;
 @PropertySource({"classpath:application.properties"})
 @EnableJpaRepositories(
         basePackages = "ua.nure.liapota.repositories.security",
-        entityManagerFactoryRef = "dataEntityManager",
-        transactionManagerRef = "dataTransactionManager")
+        entityManagerFactoryRef = "securityEntityManager",
+        transactionManagerRef = "securityTransactionManager")
 public class SecurityConfiguration extends DataBaseConfiguration{
-
     @Primary
     @Bean
     @ConfigurationProperties(prefix="spring.datasource-security")
@@ -29,7 +28,7 @@ public class SecurityConfiguration extends DataBaseConfiguration{
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean  securityEntityManager() {
+    public LocalContainerEntityManagerFactoryBean securityEntityManager() {
         LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
         entityManager.setDataSource(securityDataSource());
         entityManager.setPackagesToScan("ua.nure.liapota.models.security");
@@ -37,7 +36,7 @@ public class SecurityConfiguration extends DataBaseConfiguration{
     }
 
     @Bean
-    public PlatformTransactionManager  securityTransactionManager() {
+    public PlatformTransactionManager securityTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(securityEntityManager().getObject());
         return transactionManager;

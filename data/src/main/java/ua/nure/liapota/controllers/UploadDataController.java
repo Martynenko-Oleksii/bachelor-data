@@ -21,7 +21,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/dataLoad")
-@CrossOrigin(origins = "http://localhost:4200")
 public class UploadDataController {
     private final FileService fileService;
     private final UploadLogService uploadLogService;
@@ -37,12 +36,10 @@ public class UploadDataController {
 
     @Autowired
     public UploadDataController(FileService fileService,
-                                FileMappingService fileMappingService,
                                 UploadLogService uploadLogService,
                                 DataLoadService dataLoadService,
                                 CostCenterService costCenterService,
                                 AccountService accountService,
-                                GlRpMappingService glRpMappingService,
                                 CustomerService customerService,
                                 FacilityService facilityService) {
         this.fileService = fileService;

@@ -17,7 +17,7 @@ public class Value {
 
     @ManyToOne
     @JoinColumn(name = "time_period_id")
-    private TimePeriodFacility timePeriod;
+    private TimePeriodFacility timePeriodFacility;
 
     public int getId() {
         return id;
@@ -43,11 +43,11 @@ public class Value {
         this.mapping = mapping;
     }
 
-    public TimePeriodFacility getTimePeriod() {
-        return timePeriod;
+    public TimePeriodFacility getTimePeriodFacility() {
+        return timePeriodFacility;
     }
 
-    public void setTimePeriod(TimePeriodFacility timePeriod) {
-        this.timePeriod = timePeriod;
+    public void setTimePeriod(TimePeriodFacility timePeriodFacility) {
+        this.timePeriodFacility = timePeriodFacility;
     }
 }

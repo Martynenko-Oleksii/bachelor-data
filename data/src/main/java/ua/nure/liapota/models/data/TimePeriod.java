@@ -18,7 +18,7 @@ public class TimePeriod {
     @Column(name = "end_date")
     private Date endDate;
 
-    @OneToMany(mappedBy = "timePeriods")
+    @OneToMany(mappedBy = "timePeriod")
     private Set<TimePeriodFacility> timePeriodFacilitySet;
 
     public int getId() {

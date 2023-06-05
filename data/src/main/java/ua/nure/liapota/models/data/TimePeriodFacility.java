@@ -13,7 +13,7 @@ public class TimePeriodFacility {
     private String status;
     private int facilityId;
 
-    @OneToMany(mappedBy = "timePeriod")
+    @OneToMany(mappedBy = "timePeriodFacility")
     private Set<Value> values;
 
     @ManyToOne

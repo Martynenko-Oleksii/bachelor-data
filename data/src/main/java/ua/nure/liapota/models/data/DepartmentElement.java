@@ -12,7 +12,7 @@ public class DepartmentElement {
     @Column(name = "standart_department_id")
     private int standardDepartmentId;
     private String name;
-    @OneToMany(mappedBy = "departmentElements")
+    @OneToMany(mappedBy = "departmentElement")
     private Set<GlRpMapping> mappings;
 
     public int getId() {
