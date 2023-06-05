@@ -6,7 +6,9 @@ import javax.persistence.*;
 @Table(name = "users_customers")
 public class UserCustomer {
     @Id
+    @Column(name = "user_id")
     private String userId;
+    @Column(name = "customer_id")
     private String customerId;
 
     @ManyToOne
