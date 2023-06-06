@@ -1,5 +1,7 @@
 package ua.nure.liapota.models.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -11,6 +13,7 @@ public class ValueTypeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    @JsonIgnore
     @OneToMany(mappedBy = "valueType")
     private Set<GlRpMapping> mappings;
 
