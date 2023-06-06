@@ -121,11 +121,17 @@ public class DataLoadService{
             }
         } else {
             Set<Value> repositorySet = valueRepository.getValuesByMapping(repositoryGlMapping.getId());
-            repositorySet.addAll(localGlMapping.getValues());
-            repositoryGlMapping.setValues(repositorySet);
+            Set<Value> localSet = localGlMapping.getValues();
             repositoryGlMapping = glRpMappingRepository.save(repositoryGlMapping);
-            for (Value v : repositorySet) {
+            for (Value v : localSet) {
                 v.setMapping(repositoryGlMapping);
+                for (Value repositoryValue : repositorySet) {
+                    if (v.getMapping().getId() == repositoryValue.getMapping().getId() &&
+                    v.getTimePeriodFacility().getId() == repositoryValue.getTimePeriodFacility().getId()) {
+                        v.setId(repositoryValue.getId());
+                        break;
+                    }
+                }
                 valueRepository.save(v);
             }
         }
