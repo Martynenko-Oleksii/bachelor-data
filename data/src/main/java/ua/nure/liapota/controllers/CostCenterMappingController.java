@@ -5,11 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.liapota.annotations.Authorize;
+import ua.nure.liapota.models.data.CostCenter;
 import ua.nure.liapota.models.data.Department;
+import ua.nure.liapota.models.security.StandardDepartment;
 import ua.nure.liapota.models.util.Confirm;
 import ua.nure.liapota.services.CostCenterService;
 import ua.nure.liapota.services.DepartmentService;
+import ua.nure.liapota.services.StandardDepartmentService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Authorize("data,cc-mapping")
@@ -19,16 +23,46 @@ import java.util.List;
 public class CostCenterMappingController {
     private final DepartmentService departmentService;
     private final CostCenterService costCenterService;
+    private final StandardDepartmentService standardDepartmentService;
 
     @Autowired
-    public CostCenterMappingController(DepartmentService departmentService, CostCenterService costCenterService) {
+    public CostCenterMappingController(DepartmentService departmentService,
+                                       CostCenterService costCenterService,
+                                       StandardDepartmentService standardDepartmentService) {
         this.departmentService = departmentService;
         this.costCenterService = costCenterService;
+        this.standardDepartmentService = standardDepartmentService;
     }
 
-    @GetMapping("/department/{id}")
-    public ResponseEntity<List<Department>> getDepartmentsByFacilityId(@PathVariable Integer id) {
-        return new ResponseEntity<>(departmentService.getByFacilityId(id), HttpStatus.OK);
+    @GetMapping("/costCenter/{id}")
+    public ResponseEntity<List<CostCenter>> getCostCenters(@PathVariable Integer id) {
+        return new ResponseEntity<>(costCenterService.getByFacility(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/standardDepartment/{id}")
+    public ResponseEntity<List<StandardDepartment>> getStandardDepartments(@PathVariable Integer id,
+                                                                           HttpServletRequest request) {
+        return new ResponseEntity<>(standardDepartmentService.getStandardDepartments(
+                (String) request.getAttribute("userId"), id), HttpStatus.OK);
+    }
+
+    @GetMapping("department")
+    public ResponseEntity<List<Department>> getDepartments(
+            @RequestParam(name = "facilityId") Integer facilityId,
+            @RequestParam(name = "standardDepartmentId") Integer standardDepartmentId) {
+        return new ResponseEntity<>(departmentService.getByFacilityId(facilityId, standardDepartmentId), HttpStatus.OK);
+    }
+
+    @PutMapping("/costCenter")
+    public ResponseEntity<Void> updateMapping(@RequestBody CostCenter costCenter) {
+        costCenterService.update(costCenter);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/costCenter/deleteMapping")
+    public ResponseEntity<Void> deleteMapping(@RequestBody CostCenter costCenter) {
+        costCenterService.update(costCenter);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/confirm/{id}")
@@ -39,12 +73,6 @@ public class CostCenterMappingController {
     @PostMapping("/department")
     public ResponseEntity<Department> createDepartment(@RequestBody Department department) {
         return new ResponseEntity<>( departmentService.create(department), HttpStatus.OK);
-    }
-
-    @PutMapping("/department")
-    public ResponseEntity<Void> updateDepartment(@RequestBody Department department) {
-        departmentService.update(department);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/department/{id}")

@@ -14,8 +14,8 @@ public class DepartmentService extends EntityService<Department, Integer, Depart
         this.repository = repository;
     }
 
-    public List<Department> getByFacilityId(Integer id) {
-        return repository.getDepartmentsByFacilityID(id);
+    public List<Department> getByFacilityId(Integer facilityId, Integer standardDepartmentId) {
+        return repository.getDepartmentsByFacilityID(facilityId, standardDepartmentId);
     }
 
     public void update(Department updatedDepartment) {
