@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.nure.liapota.annotations.Authorize;
 import ua.nure.liapota.models.data.*;
 import ua.nure.liapota.models.util.MappingTableRow;
 import ua.nure.liapota.services.DepartmentElementService;
@@ -15,9 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@Authorize("data,gl-pr-mapping")
 @RestController
 @RequestMapping("/glPrMapping")
-
+@CrossOrigin(origins = "http://localhost:4200")
 public class GlRpMappingController {
     private final GlRpMappingService service;
     private final ValueTypeService valueTypeService;
