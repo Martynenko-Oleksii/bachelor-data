@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.nure.liapota.models.data.*;
 import ua.nure.liapota.enumeration.Column;
-import ua.nure.liapota.repositories.data.AccountRepository;
-import ua.nure.liapota.repositories.data.CostCenterRepository;
-import ua.nure.liapota.repositories.data.ValueTypeRepository;
+import ua.nure.liapota.repositories.data.*;
 
 import java.util.*;
 
@@ -15,15 +13,20 @@ public class DataLoadService extends GlRpMappingService{
     private final CostCenterRepository costCenterRepository;
     private final AccountRepository accountRepository;
     private final ValueTypeRepository valueTypeRepository;
+    private final ValueRepository valueRepository;
     private TimePeriodFacility timePeriod;
 
     @Autowired
-    public DataLoadService(CostCenterRepository costCenterRepository,
+    public DataLoadService(GlRpMappingRepository repository,
+                           CostCenterRepository costCenterRepository,
                            AccountRepository accountRepository,
-                           ValueTypeRepository valueTypeRepository) {
+                           ValueTypeRepository valueTypeRepository,
+                           ValueRepository valueRepository) {
         this.costCenterRepository = costCenterRepository;
         this.accountRepository = accountRepository;
         this.valueTypeRepository = valueTypeRepository;
+        this.repository = repository;
+        this.valueRepository = valueRepository;
     }
 
     public void loadPayrollData(Map<Integer, String> mapping,
@@ -40,7 +43,10 @@ public class DataLoadService extends GlRpMappingService{
                 String value = entry.getValue();
                 if(constructPrMappings(strings[key - 1], value, localRpMapping)) {
                     rpMappings.add(localRpMapping);
-                    localRpMapping.setValues(null);
+                    GlRpMapping temporalMapping = new GlRpMapping();
+                    temporalMapping.setAccount(localRpMapping.getAccount());
+                    temporalMapping.setCostCenter(localRpMapping.getCostCenter());
+                    localRpMapping = temporalMapping;
                 }
             }
 
@@ -106,12 +112,21 @@ public class DataLoadService extends GlRpMappingService{
                 localGlMapping.getValueType().getId());
 
         if (repositoryGlMapping == null) {
-            repository.save(localGlMapping);
+            Set<Value> localSet = localGlMapping.getValues();
+            localGlMapping = repository.save(localGlMapping);
+            for (Value v : localSet) {
+                v.setMapping(localGlMapping);
+                valueRepository.save(v);
+            }
         } else {
-            Set<Value> repositorySet = repositoryGlMapping.getValues();
+            Set<Value> repositorySet = valueRepository.getValuesByMapping(repositoryGlMapping.getId());
             repositorySet.addAll(localGlMapping.getValues());
             repositoryGlMapping.setValues(repositorySet);
-            repository.save(repositoryGlMapping);
+            repositoryGlMapping = repository.save(repositoryGlMapping);
+            for (Value v : repositorySet) {
+                v.setMapping(repositoryGlMapping);
+                valueRepository.save(v);
+            }
         }
     }
 
@@ -148,15 +163,6 @@ public class DataLoadService extends GlRpMappingService{
                 break;
             case ('I') :
                 result = "Income";
-                break;
-            case ('P') :
-                result = "Physician";
-                break;
-            case ('N') :
-                result = "Non-Physician";
-                break;
-            case ('C') :
-                result = "Contract";
                 break;
         }
         return result;
@@ -201,6 +207,7 @@ public class DataLoadService extends GlRpMappingService{
             Account localAccount = new Account();
             localAccount.setFacilityId(account.getFacilityId());
             localAccount.setAddedBy(account.getAddedBy());
+            localAccount.setSource(account.getSource());
 
             for (Map.Entry<Integer, String> entry : mapping.entrySet()) {
                 int key = entry.getKey();

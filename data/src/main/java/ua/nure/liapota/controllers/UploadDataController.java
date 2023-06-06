@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@Authorize("data,data-configuration")
+@Authorize("data,data-entry")
 @RestController
 @RequestMapping("/dataLoad")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -96,7 +96,7 @@ public class UploadDataController {
                 timePeriod);
         ResponseEntity<List<ErrorMessages>> response;
 
-        if (errorMessages.size() != 0) {
+        if (errorMessages != null) {
             response = new ResponseEntity<>(errorMessages, HttpStatus.OK);
         } else {
             saveData();
@@ -119,11 +119,22 @@ public class UploadDataController {
             for (CostCenter c : costCenters) {
                 costCenterService.create(c);
             }
-        } else if (fileType.equals(FileTypeEnum.GENERAL_LEDGER_ACCOUNTS_LIST.getFileTypeName()) ||
-                fileType.equals(FileTypeEnum.PAYROLL_ACCOUNTS_LIST.getFileTypeName())) {
+        } else if (fileType.equals(FileTypeEnum.GENERAL_LEDGER_ACCOUNTS_LIST.getFileTypeName())) {
             Account account = new Account();
             account.setFacilityId(timePeriod.getFacilityId());
             account.setAddedBy(userId);
+            account.setSource("GL");
+            List<Account> accounts = dataLoadService.getAccountsFromMapping(jsonMap,
+                    fileToArray,
+                    account);
+            for (Account a : accounts) {
+                accountService.create(a);
+            }
+        } else if (fileType.equals(FileTypeEnum.PAYROLL_ACCOUNTS_LIST.getFileTypeName())) {
+            Account account = new Account();
+            account.setFacilityId(timePeriod.getFacilityId());
+            account.setAddedBy(userId);
+            account.setSource("PR");
             List<Account> accounts = dataLoadService.getAccountsFromMapping(jsonMap,
                     fileToArray,
                     account);

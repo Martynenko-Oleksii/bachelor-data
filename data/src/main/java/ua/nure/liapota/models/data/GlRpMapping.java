@@ -23,7 +23,7 @@ public class GlRpMapping {
     @ManyToOne
     @JoinColumn(name = "valur_type_id")
     private ValueTypeEntity valueType;
-    @OneToMany(mappedBy = "mapping")
+    @OneToMany(mappedBy = "mapping", fetch = FetchType.EAGER)
     private Set<Value> values;
 
     public int getId() {

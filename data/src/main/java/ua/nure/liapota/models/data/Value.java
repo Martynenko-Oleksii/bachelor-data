@@ -3,7 +3,7 @@ package ua.nure.liapota.models.data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "values")
+@Table(name = "value_table")
 public class Value {
     @Id
     @Column(name = "value_id")

@@ -15,7 +15,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,71 +52,50 @@ public class FileService extends EntityService<FileEntity, Integer, FileReposito
         Path targetFile = null;
 
         if (!file.isEmpty()) {
-            Path customerDirectory = Paths.get(customer.getName());
-
-            if (Files.notExists(customerDirectory)) {
-                Files.createDirectory(customerDirectory);
-            }
-
-            Path userDirectory = customerDirectory.resolveSibling(userId);
-
-            if (Files.notExists(userDirectory)) {
-                Files.createDirectory(userDirectory);
-            }
-
-            Path facilityDirectory = userDirectory.resolveSibling(facility.getName());
-
-            if (Files.notExists(facilityDirectory)) {
-                Files.createDirectory(facilityDirectory);
-            }
-
+            String customerDirectory = customer.getName();
+            String facilityDirectory = facility.getName();
             String fileTypeName = fileData.getFileMapping().getFileType().getName();
 
             if (fileTypeName.equals(FileTypeEnum.COST_CENTER_LIST.getFileTypeName()) ||
             fileTypeName.equals(FileTypeEnum.GENERAL_LEDGER_ACCOUNTS_LIST.getFileTypeName()) ||
             fileTypeName.equals(FileTypeEnum.PAYROLL_ACCOUNTS_LIST.getFileTypeName())) {
-                Path initialDirectory = facilityDirectory.resolveSibling("initial");
-
-                if (Files.notExists(initialDirectory)) {
-                    Files.createDirectory(initialDirectory);
-                }
-
-                Path filePath = initialDirectory.resolveSibling(fileTypeName);
-
-                if (Files.notExists(filePath)) {
-                    Files.createFile(filePath);
-                }
-
-                targetFile = filePath;
+                String initialDirectory = "initial";
+                targetFile = Path.of(customerDirectory,
+                        facilityDirectory,
+                        userId,
+                        initialDirectory,
+                        fileTypeName);
             } else {
-                Path dataSetDirectory = facilityDirectory.resolveSibling(timePeriod.getTimePeriod().getShortName());
-
-                if (Files.notExists(dataSetDirectory)) {
-                    Files.createDirectory(dataSetDirectory);
-                }
-
+                String dataSetDirectory = timePeriod.getTimePeriod().getShortName();
                 Path dataSetPath;
 
                 if (dataSet != null) {
-                    dataSetPath = dataSetDirectory.resolveSibling(dataSet);
+                    dataSetPath = Path.of(customerDirectory,
+                            facilityDirectory,
+                            userId,
+                            dataSetDirectory,
+                            dataSet);
                 } else {
-                    dataSetPath = dataSetDirectory.resolveSibling(file.getOriginalFilename());
-                }
-
-
-                if (Files.notExists(dataSetPath)) {
-                    Files.createFile(dataSetPath);
+                    dataSetPath = Path.of(customerDirectory,
+                            facilityDirectory,
+                            userId,
+                            dataSetDirectory,
+                            file.getOriginalFilename());
                 }
 
                 targetFile = dataSetPath;
+            }
+            fileData.setFilePath(targetFile.toString());
+            fileData.setUploadBy(userId);
+
+            if (Files.notExists(targetFile)) {
+                Files.createDirectories(targetFile.getParent());
+                Files.createFile(targetFile);
+                repository.save(fileData);
             }
 
             byte[] data = file.getBytes();
             Files.write(targetFile, data);
         }
-
-        fileData.setFilePath(targetFile.toString());
-        fileData.setUploadBy(userId);
-        repository.save(fileData);
     }
 }

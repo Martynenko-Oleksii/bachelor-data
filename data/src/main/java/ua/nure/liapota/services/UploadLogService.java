@@ -12,6 +12,7 @@ import ua.nure.liapota.models.file.UploadLog;
 import ua.nure.liapota.models.util.ErrorMessages;
 import ua.nure.liapota.repositories.file.UploadLogRepository;
 
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class UploadLogService extends EntityService<UploadLog, Integer, UploadLo
 
                     if (!lineErrorMessages[key - 1].equals("")) {
                         haveErrors = true;
-                    } else if (isUnique(fileInArray, value, key - 1)) {
+                    } else if (!isUnique(fileInArray, value, key - 1, strings[key - 1])) {
                         lineErrorMessages[key - 1] = "must be unique";
                         haveErrors = true;
                     }
@@ -61,22 +62,22 @@ public class UploadLogService extends EntityService<UploadLog, Integer, UploadLo
                 }
             }
 
-            errorMessages.add(new ErrorMessages(strings, lineErrorMessages));
+            errorMessages.add(new ErrorMessages(lineErrorMessages, strings));
         }
 
         UploadLog log = new UploadLog();
 
         if (errorLines == 0) {
             errorMessages = null;
-            log.setStatus("error");
-        } else {
             log.setStatus("correct");
+        } else {
+            log.setStatus("error");
         }
 
         log.setErrorLinesCount(errorLines);
         log.setFacilityId(timePeriod.getFacilityId());
         log.setFileType(fileData.getFileMapping().getFileType());
-        log.setFileName(fileData.getFilePath());
+        log.setFileName(Path.of(fileData.getFilePath()).getFileName().toString());
         log.setUploadBy(fileData.getUploadBy());
         log.setLinesCount(fileInArray.length);
         log.setUploadDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -87,7 +88,7 @@ public class UploadLogService extends EntityService<UploadLog, Integer, UploadLo
         return errorMessages;
     }
 
-    private boolean isUnique(String[][] fileInArray, String mapField, int key) {
+    private boolean isUnique(String[][] fileInArray, String mapField, int key, String value) {
         boolean result = true;
 
         if ((mapField.equals(Column.ACCOUNT_CODE.getColumnName()) &&
@@ -95,12 +96,17 @@ public class UploadLogService extends EntityService<UploadLog, Integer, UploadLo
                 fileType.getName().equals(FileTypeEnum.PAYROLL_ACCOUNTS_LIST.getFileTypeName()))) ||
                 (mapField.equals(Column.COST_CENTER_NUMBER.getColumnName()) &&
                         (fileType.getName().equals(FileTypeEnum.COST_CENTER_LIST.getFileTypeName())))) {
-            String save = "";
+            int repeatNumber = 0;
+
             for (int i = 0; i < fileInArray.length; i++) {
-                if (save.equals(fileInArray[i][key])) {
-                    result = false;
-                    i = fileInArray.length;
-                }
+                    if (fileInArray[i][key].equals(value)) {
+                        if (repeatNumber == 1) {
+                            result = false;
+                            i = fileInArray.length;
+                        } else {
+                            repeatNumber++;
+                        }
+                    }
             }
         }
 
