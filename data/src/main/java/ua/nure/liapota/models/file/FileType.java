@@ -10,7 +10,6 @@ import java.util.Set;
 public class FileType {
     @Id
     @Column(name = "file_type_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
 

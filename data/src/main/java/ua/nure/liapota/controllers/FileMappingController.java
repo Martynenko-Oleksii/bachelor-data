@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.liapota.annotations.Authorize;
 import ua.nure.liapota.models.file.FileMapping;
+import ua.nure.liapota.models.file.FileType;
 import ua.nure.liapota.services.FileMappingService;
+import ua.nure.liapota.services.FileTypeService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -17,10 +19,17 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 public class FileMappingController {
     private final FileMappingService service;
+    private final FileTypeService fileTypeService;
 
     @Autowired
-    public FileMappingController(FileMappingService service) {
+    public FileMappingController(FileMappingService service, FileTypeService fileTypeService) {
         this.service = service;
+        this.fileTypeService = fileTypeService;
+    }
+
+    @GetMapping("/fileTypes")
+    public ResponseEntity<List<FileType>> getFileTypes() {
+        return new ResponseEntity<>(fileTypeService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping
