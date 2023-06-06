@@ -39,12 +39,18 @@ public class FileMappingController {
     }
 
     @PostMapping
-    public ResponseEntity<FileMapping> create(@RequestBody FileMapping fileMapping) {
+    public ResponseEntity<FileMapping> create(@RequestBody FileMapping fileMapping,
+                                              HttpServletRequest request) {
+        fileMapping.setCreatedBy((String) request.getAttribute("userId"));
+        fileMapping.setCreatedUnder((Integer) request.getAttribute("customerId"));
         return new ResponseEntity<>(service.create(fileMapping), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody FileMapping fileMapping) {
+    public ResponseEntity<Void> update(@RequestBody FileMapping fileMapping,
+                                       HttpServletRequest request) {
+        fileMapping.setCreatedBy((String) request.getAttribute("userId"));
+        fileMapping.setCreatedUnder((Integer) request.getAttribute("customerId"));
         service.update(fileMapping);
         return new ResponseEntity<>(HttpStatus.OK);
     }
