@@ -61,14 +61,6 @@ public class CostCenterMappingController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/costCenter/deleteMapping")
-    public ResponseEntity<Void> deleteMapping(@RequestBody CostCenter costCenter,
-                                              HttpServletRequest request) {
-        costCenter.setAddedBy((String) request.getAttribute("userId"));
-        costCenterService.update(costCenter);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @GetMapping("/confirm/{id}")
     public ResponseEntity<Confirm> confirm(@PathVariable Integer id) {
         return new ResponseEntity<>(costCenterService.getConfirm(id), HttpStatus.OK);
