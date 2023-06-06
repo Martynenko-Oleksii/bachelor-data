@@ -45,7 +45,7 @@ public class GlRpMappingController {
         List<Account> accounts = new ArrayList<>();
 
         for (GlRpMapping m : mappings) {
-
+            accounts.add(m.getAccount());
         }
 
         return new ResponseEntity<>(accounts, HttpStatus.OK);

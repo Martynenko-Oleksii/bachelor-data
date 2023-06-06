@@ -17,6 +17,7 @@ import ua.nure.liapota.services.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -69,8 +70,7 @@ public class UploadDataController {
                                                HttpServletRequest request)
             throws JsonProcessingException {
         this.timePeriod = timePeriodService.getById(timePeriodId);
-        //this.userId = (String) request.getAttribute("userId");
-        this.userId = "12345678-1234-1234-1234-123456789123";
+        this.userId = (String) request.getAttribute("userId");
         this.fileEntity = new FileEntity();
         fileEntity.setFileMapping(fileMappingService.getById(mappingId));
         if (delimiter == 1) {
@@ -81,8 +81,7 @@ public class UploadDataController {
 
         try {
             fileService.uploadFile(file,
-                    //customerService.getById((Integer) request.getAttribute("customerId")),
-                    customerService.getById(2),
+                    customerService.getById((Integer) request.getAttribute("customerId")),
                     userId,
                     facilityService.getById(timePeriod.getFacilityId()),
                     timePeriod,
@@ -102,7 +101,7 @@ public class UploadDataController {
             response = new ResponseEntity<>(errorMessages, HttpStatus.OK);
         } else {
             saveData();
-            response = new ResponseEntity<>(HttpStatus.OK);
+            response = new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
 
         return response;
