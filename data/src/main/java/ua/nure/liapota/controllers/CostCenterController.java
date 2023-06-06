@@ -7,6 +7,7 @@ import ua.nure.liapota.annotations.Authorize;
 import ua.nure.liapota.models.data.CostCenter;
 import ua.nure.liapota.services.CostCenterService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Authorize("data,data-configuration")
@@ -26,12 +27,16 @@ public class CostCenterController {
     }
 
     @PostMapping
-    public ResponseEntity<CostCenter> create(@RequestBody CostCenter costCenter) {
+    public ResponseEntity<CostCenter> create(@RequestBody CostCenter costCenter,
+                                             HttpServletRequest request) {
+        costCenter.setAddedBy((String) request.getAttribute("userId"));
         return new ResponseEntity<>(service.create(costCenter), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody CostCenter costCenter) {
+    public ResponseEntity<Void> update(@RequestBody CostCenter costCenter,
+                                       HttpServletRequest request) {
+        costCenter.setAddedBy((String) request.getAttribute("userId"));
         service.update(costCenter);
         return new ResponseEntity<>(HttpStatus.OK);
     }

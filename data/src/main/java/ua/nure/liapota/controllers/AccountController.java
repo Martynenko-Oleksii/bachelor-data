@@ -8,6 +8,7 @@ import ua.nure.liapota.annotations.Authorize;
 import ua.nure.liapota.models.data.Account;
 import ua.nure.liapota.services.AccountService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Authorize("data,data-configuration")
@@ -28,12 +29,16 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<Account> create(@RequestBody Account account) {
+    public ResponseEntity<Account> create(@RequestBody Account account,
+                                          HttpServletRequest request) {
+        account.setAddedBy((String) request.getAttribute("userId"));
         return new ResponseEntity<>(service.create(account), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody Account account) {
+    public ResponseEntity<Void> update(@RequestBody Account account,
+                                       HttpServletRequest request) {
+        account.setAddedBy((String) request.getAttribute("userId"));
         service.update(account);
         return new ResponseEntity<>(HttpStatus.OK);
     }
