@@ -2,6 +2,7 @@ package ua.nure.liapota.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.nure.liapota.models.data.DepartmentElement;
 import ua.nure.liapota.models.data.GlRpMapping;
 import ua.nure.liapota.repositories.data.GlRpMappingRepository;
 
@@ -36,5 +37,29 @@ public class GlRpMappingService extends EntityService<GlRpMapping, Integer, GlRp
         }
 
         return result;
+    }
+
+    public List<GlRpMapping> getByCostCenterAccountType(Integer valueTypeId,
+                                                        String accountCode,
+                                                        String costCenterName,
+                                                        boolean mapped) {
+        List<GlRpMapping> result;
+
+        if (mapped) {
+            result = repository.getGlRpMappingByValueTypeAndAccountAndCostCenterMapped(valueTypeId,
+                    accountCode,
+                    costCenterName);
+        } else {
+            result = repository.getGlRpMappingByValueTypeAndAccountAndCostCenterUnmapped(valueTypeId,
+                    accountCode,
+                    costCenterName);
+        }
+
+        return result;
+    }
+
+    public void update(GlRpMapping mapping, DepartmentElement departmentElement) {
+        mapping.setDepartmentElement(departmentElement);
+        repository.save(mapping);
     }
 }

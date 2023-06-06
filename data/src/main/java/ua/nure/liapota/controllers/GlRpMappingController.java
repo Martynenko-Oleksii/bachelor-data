@@ -5,11 +5,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.nure.liapota.models.data.Account;
-import ua.nure.liapota.models.data.CostCenter;
-import ua.nure.liapota.models.data.GlRpMapping;
-import ua.nure.liapota.models.data.ValueTypeEntity;
-import ua.nure.liapota.services.AccountService;
+import ua.nure.liapota.models.data.*;
+import ua.nure.liapota.models.util.MappingTableRow;
+import ua.nure.liapota.services.DepartmentElementService;
 import ua.nure.liapota.services.GlRpMappingService;
 import ua.nure.liapota.services.ValueTypeService;
 
@@ -23,15 +21,15 @@ import java.util.List;
 public class GlRpMappingController {
     private final GlRpMappingService service;
     private final ValueTypeService valueTypeService;
-    private final AccountService accountService;
+    private final DepartmentElementService departmentElementService;
 
     @Autowired
     public GlRpMappingController(@Qualifier("glRpMappingService") GlRpMappingService service,
                                  ValueTypeService valueTypeService,
-                                 AccountService accountService) {
+                                 DepartmentElementService departmentElementService) {
         this.service = service;
         this.valueTypeService = valueTypeService;
-        this.accountService = accountService;
+        this.departmentElementService = departmentElementService;
     }
 
     @GetMapping("/accountTypes")
@@ -64,5 +62,40 @@ public class GlRpMappingController {
         }
 
         return new ResponseEntity<>(costCenters, HttpStatus.OK);
+    }
+
+    @GetMapping("/mappings")
+    public ResponseEntity<List<MappingTableRow>> getMappings(@RequestParam(name = "valueTypeId") Integer valueTypeId,
+                                                             @RequestParam(name = "mapped") boolean mapped,
+                                                             @RequestParam(name = "code") String accountCode,
+                                                             @RequestParam(name = "costCenter") String costCenterNumber) {
+        List<GlRpMapping> mappings = service.getByCostCenterAccountType(valueTypeId,
+                accountCode,
+                costCenterNumber,
+                mapped);
+        List<MappingTableRow> mappingTableRows = new ArrayList<>();
+
+        for (GlRpMapping m : mappings) {
+            MappingTableRow mappingTableRow = new MappingTableRow(m.getId(),
+                    m.getCostCenter(),
+                    m.getAccount(),
+                    m.getValueType(),
+                    m.getDepartmentElement());
+            mappingTableRows.add(mappingTableRow);
+        }
+
+        return new ResponseEntity<>(mappingTableRows, HttpStatus.OK);
+    }
+
+    @GetMapping("/departmentElements/{id}")
+    public ResponseEntity<List<DepartmentElement>> getDepartmentElements(@PathVariable Integer id) {
+        return new ResponseEntity<>(departmentElementService.getByStandard(id), HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> updateMapping(@RequestParam(name = "mappingId") Integer mappingId,
+                                              @RequestParam(name = "departmentElementId") Integer departmentElementId) {
+        service.update(service.getById(mappingId), departmentElementService.getById(departmentElementId));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

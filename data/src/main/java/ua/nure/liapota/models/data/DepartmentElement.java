@@ -1,5 +1,7 @@
 package ua.nure.liapota.models.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -12,6 +14,7 @@ public class DepartmentElement {
     @Column(name = "standart_department_id")
     private int standardDepartmentId;
     private String name;
+    @JsonIgnore
     @OneToMany(mappedBy = "departmentElement")
     private Set<GlRpMapping> mappings;
 
