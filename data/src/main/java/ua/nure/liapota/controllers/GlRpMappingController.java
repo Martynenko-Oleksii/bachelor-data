@@ -4,34 +4,50 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ua.nure.liapota.annotations.Authorize;
+import org.springframework.web.bind.annotation.*;
+import ua.nure.liapota.models.data.Account;
+import ua.nure.liapota.models.data.GlRpMapping;
 import ua.nure.liapota.models.data.ValueTypeEntity;
+import ua.nure.liapota.services.AccountService;
 import ua.nure.liapota.services.GlRpMappingService;
 import ua.nure.liapota.services.ValueTypeService;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Authorize("data,gl-pr-mapping")
+
 @RestController
 @RequestMapping("/glPrMapping")
-@CrossOrigin(origins = "http://localhost:4200")
+
 public class GlRpMappingController {
     private final GlRpMappingService service;
     private final ValueTypeService valueTypeService;
+    private final AccountService accountService;
 
     @Autowired
     public GlRpMappingController(@Qualifier("glRpMappingService") GlRpMappingService service,
-                                 ValueTypeService valueTypeService) {
+                                 ValueTypeService valueTypeService,
+                                 AccountService accountService) {
         this.service = service;
         this.valueTypeService = valueTypeService;
+        this.accountService = accountService;
     }
 
     @GetMapping("/accountTypes")
     public ResponseEntity<List<ValueTypeEntity>> getAccountTypes() {
         return new ResponseEntity<>(valueTypeService.getAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/accounts")
+    public ResponseEntity<List<Account>> getAccounts(@RequestParam(name = "valueTypeId") Integer valueTypeId,
+                                                     @RequestParam(name = "mapped") boolean mapped) {
+        List<GlRpMapping> mappings = service.getByValueType(valueTypeId, mapped);
+        List<Account> accounts = new ArrayList<>();
+
+        for (GlRpMapping m : mappings) {
+
+        }
+
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 }

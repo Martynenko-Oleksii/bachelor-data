@@ -9,15 +9,16 @@ import ua.nure.liapota.repositories.data.*;
 import java.util.*;
 
 @Service
-public class DataLoadService extends GlRpMappingService{
+public class DataLoadService{
     private final CostCenterRepository costCenterRepository;
     private final AccountRepository accountRepository;
     private final ValueTypeRepository valueTypeRepository;
     private final ValueRepository valueRepository;
+    private final GlRpMappingRepository glRpMappingRepository;
     private TimePeriodFacility timePeriod;
 
     @Autowired
-    public DataLoadService(GlRpMappingRepository repository,
+    public DataLoadService(GlRpMappingRepository glRpMappingRepository,
                            CostCenterRepository costCenterRepository,
                            AccountRepository accountRepository,
                            ValueTypeRepository valueTypeRepository,
@@ -25,7 +26,7 @@ public class DataLoadService extends GlRpMappingService{
         this.costCenterRepository = costCenterRepository;
         this.accountRepository = accountRepository;
         this.valueTypeRepository = valueTypeRepository;
-        this.repository = repository;
+        this.glRpMappingRepository = glRpMappingRepository;
         this.valueRepository = valueRepository;
     }
 
@@ -51,9 +52,9 @@ public class DataLoadService extends GlRpMappingService{
             }
 
             for (GlRpMapping m : rpMappings) {
-                localRpMapping.setValues(m.getValues());
-                localRpMapping.setValueType(m.getValueType());
-                saveMapping(localRpMapping);
+                m.setAccount(localRpMapping.getAccount());
+                m.setCostCenter(localRpMapping.getCostCenter());
+                saveMapping(m);
             }
         }
     }
@@ -106,14 +107,14 @@ public class DataLoadService extends GlRpMappingService{
     }
 
     private void saveMapping(GlRpMapping localGlMapping) {
-        GlRpMapping repositoryGlMapping = repository.getGlRpMappingByCostCenterAndAccountAndValueType(
+        GlRpMapping repositoryGlMapping = glRpMappingRepository.getGlRpMappingByCostCenterAndAccountAndValueType(
                 localGlMapping.getCostCenter().getNumber(),
                 localGlMapping.getAccount().getCode(),
                 localGlMapping.getValueType().getId());
 
         if (repositoryGlMapping == null) {
             Set<Value> localSet = localGlMapping.getValues();
-            localGlMapping = repository.save(localGlMapping);
+            localGlMapping = glRpMappingRepository.save(localGlMapping);
             for (Value v : localSet) {
                 v.setMapping(localGlMapping);
                 valueRepository.save(v);
@@ -122,7 +123,7 @@ public class DataLoadService extends GlRpMappingService{
             Set<Value> repositorySet = valueRepository.getValuesByMapping(repositoryGlMapping.getId());
             repositorySet.addAll(localGlMapping.getValues());
             repositoryGlMapping.setValues(repositorySet);
-            repositoryGlMapping = repository.save(repositoryGlMapping);
+            repositoryGlMapping = glRpMappingRepository.save(repositoryGlMapping);
             for (Value v : repositorySet) {
                 v.setMapping(repositoryGlMapping);
                 valueRepository.save(v);

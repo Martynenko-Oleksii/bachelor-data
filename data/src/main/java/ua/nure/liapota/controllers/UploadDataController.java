@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@Authorize("data,data-entry")
+@Authorize("data,data-configuration")
 @RestController
 @RequestMapping("/dataLoad")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -69,7 +69,8 @@ public class UploadDataController {
                                                HttpServletRequest request)
             throws JsonProcessingException {
         this.timePeriod = timePeriodService.getById(timePeriodId);
-        this.userId = (String) request.getAttribute("userId");
+        //this.userId = (String) request.getAttribute("userId");
+        this.userId = "12345678-1234-1234-1234-123456789123";
         this.fileEntity = new FileEntity();
         fileEntity.setFileMapping(fileMappingService.getById(mappingId));
         if (delimiter == 1) {
@@ -80,7 +81,8 @@ public class UploadDataController {
 
         try {
             fileService.uploadFile(file,
-                    customerService.getById((Integer) request.getAttribute("customerId")),
+                    //customerService.getById((Integer) request.getAttribute("customerId")),
+                    customerService.getById(2),
                     userId,
                     facilityService.getById(timePeriod.getFacilityId()),
                     timePeriod,
