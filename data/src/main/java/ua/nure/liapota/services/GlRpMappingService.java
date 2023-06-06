@@ -25,4 +25,16 @@ public class GlRpMappingService extends EntityService<GlRpMapping, Integer, GlRp
 
         return result;
     }
+
+    public List<GlRpMapping> getByAccountType(Integer valueTypeId, String accountCode, boolean mapped) {
+        List<GlRpMapping> result;
+
+        if (mapped) {
+            result = repository.getGlRpMappingByValueTypeAndAccountMapped(valueTypeId, accountCode);
+        } else {
+            result = repository.getGlRpMappingByValueTypeAndAccountUnmapped(valueTypeId, accountCode);
+        }
+
+        return result;
+    }
 }

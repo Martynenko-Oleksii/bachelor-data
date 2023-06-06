@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.liapota.models.data.Account;
+import ua.nure.liapota.models.data.CostCenter;
 import ua.nure.liapota.models.data.GlRpMapping;
 import ua.nure.liapota.models.data.ValueTypeEntity;
 import ua.nure.liapota.services.AccountService;
@@ -49,5 +50,19 @@ public class GlRpMappingController {
         }
 
         return new ResponseEntity<>(accounts, HttpStatus.OK);
+    }
+
+    @GetMapping("/costCenters")
+    public ResponseEntity<List<CostCenter>> getCostCenters(@RequestParam(name = "valueTypeId") Integer valueTypeId,
+                                                           @RequestParam(name = "mapped") boolean mapped,
+                                                           @RequestParam(name = "code") String accountCode) {
+        List<GlRpMapping> mappings = service.getByAccountType(valueTypeId, accountCode, mapped);
+        List<CostCenter> costCenters = new ArrayList<>();
+
+        for (GlRpMapping m : mappings) {
+            costCenters.add(m.getCostCenter());
+        }
+
+        return new ResponseEntity<>(costCenters, HttpStatus.OK);
     }
 }
