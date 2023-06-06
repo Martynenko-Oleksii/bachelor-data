@@ -54,13 +54,17 @@ public class CostCenterMappingController {
     }
 
     @PutMapping("/costCenter")
-    public ResponseEntity<Void> updateMapping(@RequestBody CostCenter costCenter) {
+    public ResponseEntity<Void> updateMapping(@RequestBody CostCenter costCenter,
+                                              HttpServletRequest request) {
+        costCenter.setAddedBy((String) request.getAttribute("userId"));
         costCenterService.update(costCenter);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/costCenter/deleteMapping")
-    public ResponseEntity<Void> deleteMapping(@RequestBody CostCenter costCenter) {
+    public ResponseEntity<Void> deleteMapping(@RequestBody CostCenter costCenter,
+                                              HttpServletRequest request) {
+        costCenter.setAddedBy((String) request.getAttribute("userId"));
         costCenterService.update(costCenter);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -71,7 +75,9 @@ public class CostCenterMappingController {
     }
 
     @PostMapping("/department")
-    public ResponseEntity<Department> createDepartment(@RequestBody Department department) {
+    public ResponseEntity<Department> createDepartment(@RequestBody Department department,
+                                                       HttpServletRequest request) {
+        department.setCreatedBy((String) request.getAttribute("userId"));
         return new ResponseEntity<>( departmentService.create(department), HttpStatus.OK);
     }
 
