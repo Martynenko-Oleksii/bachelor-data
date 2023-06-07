@@ -11,7 +11,7 @@ public class Value {
     private int id;
     private double value;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CC_account_mapping_id")
     private GlRpMapping mapping;
 
