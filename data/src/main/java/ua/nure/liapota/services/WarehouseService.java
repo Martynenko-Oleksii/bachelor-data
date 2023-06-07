@@ -52,7 +52,8 @@ public class WarehouseService {
         facilityWarehouse.setId(facility.getId());
         facilityWarehouse.setAddress2(facility.getAddress2());
         facilityWarehouse.setContactEmail(facility.getContactEmail());
-        facilityWarehouse.setContactPhone(facilityWarehouse.getContactPhone());
+        facilityWarehouse.setContactPhone(facility.getContactPhone());
+        facilityWarehouse.setName(facility.getName());
         facilityWarehouse.setZipCode(facility.getZipCode());
         return facilityWarehouse;
     }

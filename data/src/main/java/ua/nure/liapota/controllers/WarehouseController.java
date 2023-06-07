@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.nure.liapota.annotations.Authorize;
 import ua.nure.liapota.models.data.TimePeriodFacility;
 import ua.nure.liapota.models.data.Value;
 import ua.nure.liapota.models.warehouse.DepartmentInstanceWarehouse;
@@ -15,10 +16,10 @@ import ua.nure.liapota.services.WarehouseService;
 
 import java.util.List;
 
-
+@Authorize("data,data-administration")
 @RestController
 @RequestMapping("/timePeriod")
-
+@CrossOrigin(origins = "http://localhost:4200")
 public class WarehouseController {
     private final TimePeriodFacilityService timePeriodFacilityService;
     private final WarehouseService warehouseService;
