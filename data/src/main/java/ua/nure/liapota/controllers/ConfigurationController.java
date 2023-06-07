@@ -51,7 +51,7 @@ public class ConfigurationController {
             timePeriodFacilities.add(timePeriodFacility);
         }
 
-        return new ResponseEntity<>(timePeriodFacilities, HttpStatus.OK);
+        return new ResponseEntity<>(timePeriodFacilityService.getOpenTimePeriodByFacilityId(id), HttpStatus.OK);
     }
 
     private boolean haveCurrent(List<TimePeriodFacility> timePeriodFacilities) {

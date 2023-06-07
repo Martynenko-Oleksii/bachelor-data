@@ -18,6 +18,10 @@ public class TimePeriodFacilityService extends EntityService<TimePeriodFacility,
         return repository.getTimePeriodByFacilityId(id);
     }
 
+    public List<TimePeriodFacility> getOpenTimePeriodByFacilityId(Integer id) {
+        return repository.getOpenTimePeriodByFacilityId(id);
+    }
+
     public TimePeriodFacility close(Integer id) {
         TimePeriodFacility result = repository.findById(id).get();
         result.setStatus("Closed");

@@ -7,7 +7,11 @@ import ua.nure.liapota.models.data.TimePeriodFacility;
 import java.util.List;
 
 public interface TimePeriodFacilityRepository extends CrudRepository<TimePeriodFacility, Integer> {
-    @Query(value = "SELECT * FROM time_periods_facility WHERE facility_id = ?1 AND status = 'Opened'",
+    @Query(value = "SELECT * FROM time_periods_facility WHERE facility_id = ?1",
             nativeQuery = true)
     List<TimePeriodFacility> getTimePeriodByFacilityId(int facilityId);
+
+    @Query(value = "SELECT * FROM time_periods_facility WHERE facility_id = ?1 AND status = 'Opened'",
+            nativeQuery = true)
+    List<TimePeriodFacility> getOpenTimePeriodByFacilityId(int facilityId);
 }
