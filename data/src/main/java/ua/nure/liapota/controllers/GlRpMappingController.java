@@ -41,12 +41,17 @@ public class GlRpMappingController {
 
     @GetMapping("/accounts")
     public ResponseEntity<List<Account>> getAccounts(@RequestParam(name = "valueTypeId") Integer valueTypeId,
-                                                     @RequestParam(name = "mapped") boolean mapped) {
+                                                     @RequestParam(name = "mapped") boolean mapped,
+                                                     @RequestParam(name = "facilityId") Integer facilityId) {
         List<GlRpMapping> mappings = service.getByValueType(valueTypeId, mapped);
         List<Account> accounts = new ArrayList<>();
 
         for (GlRpMapping m : mappings) {
-            accounts.add(m.getAccount());
+            Account account = m.getAccount();
+
+            if (account.getFacilityId() == facilityId) {
+                accounts.add(account);
+            }
         }
 
         return new ResponseEntity<>(accounts, HttpStatus.OK);
@@ -55,12 +60,17 @@ public class GlRpMappingController {
     @GetMapping("/costCenters")
     public ResponseEntity<List<CostCenter>> getCostCenters(@RequestParam(name = "valueTypeId") Integer valueTypeId,
                                                            @RequestParam(name = "mapped") boolean mapped,
-                                                           @RequestParam(name = "code") String accountCode) {
+                                                           @RequestParam(name = "code") String accountCode,
+                                                           @RequestParam(name = "facilityId") Integer facilityId) {
         List<GlRpMapping> mappings = service.getByAccountType(valueTypeId, accountCode, mapped);
         List<CostCenter> costCenters = new ArrayList<>();
 
         for (GlRpMapping m : mappings) {
-            costCenters.add(m.getCostCenter());
+            CostCenter costCenter = m.getCostCenter();
+
+            if (costCenter.getFacilityID() == facilityId) {
+                costCenters.add(m.getCostCenter());
+            }
         }
 
         return new ResponseEntity<>(costCenters, HttpStatus.OK);
