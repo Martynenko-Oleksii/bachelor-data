@@ -89,8 +89,14 @@ public class WarehouseService {
     public Measure getMeasure(Value value) {
         Measure measure = new Measure();
         DepartmentElement departmentElement = value.getMapping().getDepartmentElement();
-        measure.setId(departmentElement.getId());
-        measure.setDepartmentElementName(departmentElement.getName());
+
+        if (departmentElement != null) {
+            measure.setId(departmentElement.getId());
+            measure.setDepartmentElementName(departmentElement.getName());
+        } else {
+            measure = null;
+        }
+
         return measure;
     }
 
@@ -99,36 +105,38 @@ public class WarehouseService {
                          DepartmentInstanceWarehouse departmentInstanceWarehouse,
                          Measure measure,
                          Value value) {
-        FactKey factKey = new FactKey();
-        if (facilityWarehouseRepository.findById(facilityWarehouse.getId()).isEmpty()) {
-            facilityWarehouseRepository.save(facilityWarehouse);
-        }
-        factKey.setFacilityId(facilityWarehouse.getId());
+        if (measure != null) {
+            FactKey factKey = new FactKey();
+            if (facilityWarehouseRepository.findById(facilityWarehouse.getId()).isEmpty()) {
+                facilityWarehouseRepository.save(facilityWarehouse);
+            }
+            factKey.setFacilityId(facilityWarehouse.getId());
 
-        if (timePeriodWarehouseRepository.findById(timePeriodWarehouse.getId()).isEmpty()) {
-            timePeriodWarehouseRepository.save(timePeriodWarehouse);
-        }
-        factKey.setTimePeriodId(timePeriodWarehouse.getId());
+            if (timePeriodWarehouseRepository.findById(timePeriodWarehouse.getId()).isEmpty()) {
+                timePeriodWarehouseRepository.save(timePeriodWarehouse);
+            }
+            factKey.setTimePeriodId(timePeriodWarehouse.getId());
 
-        if (departmentInstanceRepository.findById(departmentInstanceWarehouse.getId()).isEmpty()) {
-            departmentInstanceRepository.save(departmentInstanceWarehouse);
-        }
-        factKey.setDepartmentId(departmentInstanceWarehouse.getId());
+            if (departmentInstanceRepository.findById(departmentInstanceWarehouse.getId()).isEmpty()) {
+                departmentInstanceRepository.save(departmentInstanceWarehouse);
+            }
+            factKey.setDepartmentId(departmentInstanceWarehouse.getId());
 
-        if (measureRepository.findById(measure.getId()).isEmpty()) {
-            measureRepository.save(measure);
-        }
-        factKey.setMeasureId(measure.getId());
+            if (measureRepository.findById(measure.getId()).isEmpty()) {
+                measureRepository.save(measure);
+            }
+            factKey.setMeasureId(measure.getId());
 
-        if (factRepository.findById(factKey).isEmpty()) {
-            Fact fact = new Fact();
-            fact.setValue(value.getValue());
-            fact.setFactKey(factKey);
-            factRepository.save(fact);
-        } else {
-            Fact fact = factRepository.findById(factKey).get();
-            fact.setValue(fact.getValue() + value.getValue());
-            factRepository.save(fact);
+            if (factRepository.findById(factKey).isEmpty()) {
+                Fact fact = new Fact();
+                fact.setValue(value.getValue());
+                fact.setFactKey(factKey);
+                factRepository.save(fact);
+            } else {
+                Fact fact = factRepository.findById(factKey).get();
+                fact.setValue(fact.getValue() + value.getValue());
+                factRepository.save(fact);
+            }
         }
     }
 }
