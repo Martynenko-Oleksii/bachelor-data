@@ -64,6 +64,7 @@ public class WarehouseService {
         timePeriodWarehouse.setEndDate(timePeriod.getTimePeriod().getEndDate());
         timePeriodWarehouse.setShortName(timePeriod.getTimePeriod().getShortName());
         timePeriodWarehouse.setStartDate(timePeriod.getTimePeriod().getStartDate());
+        timePeriodWarehouse.setType('Q');
         return timePeriodWarehouse;
     }
 
