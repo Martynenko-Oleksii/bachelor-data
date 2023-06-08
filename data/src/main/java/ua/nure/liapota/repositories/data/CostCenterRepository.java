@@ -14,13 +14,13 @@ public interface CostCenterRepository extends CrudRepository<CostCenter, String>
     List<CostCenter> getCostCentersMapping(Integer id);
 
     @Query(value = "SELECT * FROM cost_centers " +
-            "WHERE number = (SELECT CC_number FROM GL_RP_mappings " +
+            "WHERE number IN (SELECT CC_number FROM GL_RP_mappings " +
             "WHERE account_code = ?1 AND valur_type_id = ?2 AND department_element_id IS NOT NULL) " +
             "AND facility_id = ?3", nativeQuery = true)
     List<CostCenter> getCostCentersByAccountCodeMapped(String accountCode, Integer valueTypeId, Integer facilityId);
 
     @Query(value = "SELECT * FROM cost_centers " +
-            "WHERE number = (SELECT CC_number FROM GL_RP_mappings " +
+            "WHERE number IN (SELECT CC_number FROM GL_RP_mappings " +
             "WHERE account_code = ?1 AND valur_type_id = ?2 AND department_element_id IS NULL) " +
             "AND facility_id = ?3", nativeQuery = true)
     List<CostCenter> getCostCentersByAccountCodeUnmapped(String accountCode, Integer valueTypeId, Integer facilityId);
