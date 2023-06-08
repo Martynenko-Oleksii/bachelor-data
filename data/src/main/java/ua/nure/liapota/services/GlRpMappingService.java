@@ -15,6 +15,18 @@ public class GlRpMappingService extends EntityService<GlRpMapping, Integer, GlRp
         this.repository = repository;
     }
 
+    public List<GlRpMapping> getByMapping(boolean mapped) {
+        List<GlRpMapping> result;
+
+        if (mapped) {
+            result = repository.getGlRpMappingMapped();
+        } else {
+            result = repository.getGlRpMappingUnmapped();
+        }
+
+        return result;
+    }
+
     public List<GlRpMapping> getByValueType(Integer valueTypeId, boolean mapped) {
         List<GlRpMapping> result;
 

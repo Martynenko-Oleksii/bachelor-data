@@ -14,6 +14,14 @@ public interface GlRpMappingRepository extends CrudRepository<GlRpMapping, Integ
                                                                          String accountCode,
                                                                          Integer valueType);
 
+    @Query(value = "SELECT TOP 100 * FROM GL_RP_mappings WHERE department_element_id IS NULL",
+            nativeQuery = true)
+    List<GlRpMapping> getGlRpMappingUnmapped();
+
+    @Query(value = "SELECT TOP 100 * FROM GL_RP_mappings WHERE department_element_id IS NOT NULL",
+            nativeQuery = true)
+    List<GlRpMapping> getGlRpMappingMapped();
+
     @Query(value = "SELECT TOP 100 * FROM GL_RP_mappings WHERE department_element_id IS NULL " +
             "AND valur_type_id = ?1", nativeQuery = true)
     List<GlRpMapping> getGlRpMappingByValueTypeUnmapped(Integer valueType);

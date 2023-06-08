@@ -19,6 +19,21 @@ public class CostCenterService extends EntityService<CostCenter, String, CostCen
         return repository.getCostCentersByFacilityID(id);
     }
 
+    public List<CostCenter> getByAccountCode(Integer valueTypeId,
+                                             String accountCode,
+                                             Integer facilityId,
+                                             boolean mapped) {
+        List<CostCenter> costCenters;
+
+        if (mapped) {
+            costCenters = repository.getCostCentersByAccountCodeMapped(accountCode, valueTypeId, facilityId);
+        } else {
+            costCenters = repository.getCostCentersByAccountCodeUnmapped(accountCode, valueTypeId, facilityId);
+        }
+
+        return costCenters;
+    }
+
     public void update(CostCenter updatedCostCenter) {
         CostCenter savedCostCenter = getById(updatedCostCenter.getNumber());
         savedCostCenter.setAddedBy(updatedCostCenter.getAddedBy());
