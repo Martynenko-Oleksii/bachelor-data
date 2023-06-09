@@ -11,7 +11,9 @@ public interface ValueTypeRepository extends CrudRepository<ValueTypeEntity, Int
     ValueTypeEntity findByName(String name);
 
     @Query(value = "SELECT * FROM value_types WHERE value_type_id IN " +
-            "(SELECT valur_type_id FROM GL_RP_mappings WHERE department_element_id IS NOT NULL)",
+            "(SELECT valur_type_id FROM GL_RP_mappings JOIN accounts " +
+            "ON GL_RP_mappings.account_code = accounts.code " +
+            "WHERE accounts.facility_id = ?1 AND department_element_id IS NOT NULL)",
     nativeQuery = true)
-    List<ValueTypeEntity> findMapped();
+    List<ValueTypeEntity> findMapped(Integer facilityId);
 }

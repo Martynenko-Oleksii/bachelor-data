@@ -39,11 +39,12 @@ public class GlRpMappingController {
     }
 
     @GetMapping("/accountTypes")
-    public ResponseEntity<List<ValueTypeEntity>> getAccountTypes(@RequestParam(name = "mapped") boolean mapped) {
+    public ResponseEntity<List<ValueTypeEntity>> getAccountTypes(@RequestParam(name = "mapped") boolean mapped,
+                                                                 @RequestParam(name = "facilityId") Integer facilityId) {
         List<ValueTypeEntity> valueTypes;
 
         if (mapped) {
-            valueTypes = valueTypeService.getMappedValueTypes();
+            valueTypes = valueTypeService.getMappedValueTypes(facilityId);
         } else {
             valueTypes = valueTypeService.getAll();
         }

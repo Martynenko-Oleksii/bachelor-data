@@ -14,7 +14,8 @@ public class ValueTypeService extends EntityService<ValueTypeEntity, Integer, Va
         this.repository = repository;
     }
 
-    public List<ValueTypeEntity> getMappedValueTypes() {
-        return this.repository.findMapped();
+    public List<ValueTypeEntity> getMappedValueTypes(Integer facilityId) {
+
+        return this.repository.findMapped(facilityId);
     }
 }
