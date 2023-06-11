@@ -27,6 +27,54 @@ public class GlRpMappingService extends EntityService<GlRpMapping, Integer, GlRp
         return result;
     }
 
+    public List<GlRpMapping> getByCostCenterType(Integer valueType, String costCenterNumber, boolean mapped) {
+        List<GlRpMapping> result;
+
+        if (mapped) {
+            result = repository.getGlRpMappingByCostCenterAndValueTypeMapped(valueType, costCenterNumber);
+        } else {
+            result = repository.getGlRpMappingByCostCenterAndValueTypeUnmapped(valueType, costCenterNumber);
+        }
+
+        return result;
+    }
+
+    public List<GlRpMapping> getByAccount(String accountCode, boolean mapped) {
+        List<GlRpMapping> result;
+
+        if (mapped) {
+            result = repository.getGlRpMappingByAccountMapped(accountCode);
+        } else {
+            result = repository.getGlRpMappingByAccountUnmapped(accountCode);
+        }
+
+        return result;
+    }
+
+    public List<GlRpMapping> getByCostCenterAccount(String accountCode, String costCenter, boolean mapped) {
+        List<GlRpMapping> result;
+
+        if (mapped) {
+            result = repository.getGlRpMappingByAccountAndCostCenterMapped(accountCode, costCenter);
+        } else {
+            result = repository.getGlRpMappingByAccountAndCostCenterUnmapped(accountCode, costCenter);
+        }
+
+        return result;
+    }
+
+    public List<GlRpMapping> getByCostCenter(String costCenterNumber, boolean mapped) {
+        List<GlRpMapping> result;
+
+        if (mapped) {
+            result = repository.getGlRpMappingByCostCenterMapped(costCenterNumber);
+        } else {
+            result = repository.getGlRpMappingByCostCenterUnmapped(costCenterNumber);
+        }
+
+        return result;
+    }
+
     public List<GlRpMapping> getByValueType(Integer valueTypeId, boolean mapped) {
         List<GlRpMapping> result;
 

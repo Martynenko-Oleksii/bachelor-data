@@ -104,39 +104,42 @@ public class GlRpMappingController {
 
     @GetMapping("/mappings")
     public ResponseEntity<List<MappingTableRow>> getMappings(@RequestParam(name = "valueTypeId") Integer valueTypeId,
-                                                             @RequestParam(name = "mapped") Boolean mapped,
+                                                             @RequestParam(name = "mapped") boolean mapped,
                                                              @RequestParam(name = "code") String accountCode,
                                                              @RequestParam(name = "costCenter") String costCenterNumber) {
         List<GlRpMapping> mappings;
 
-        if (mapped == null) {
-            if (valueTypeId == null &&
-            accountCode == null &&
-            costCenterNumber == null) {
-                mappings = service.getAll();
+        if (valueTypeId == null) {
+            if (accountCode == null) {
+                if (costCenterNumber == null) {
+                    mappings = service.getByMapping(mapped);
+                } else {
+                    mappings = service.getByCostCenter(costCenterNumber, mapped);
+                }
             } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                if (costCenterNumber == null) {
+                    mappings = service.getByAccount(accountCode, mapped);
+                } else {
+                    mappings = service.getByCostCenterAccount(accountCode, costCenterNumber, mapped);
+                }
             }
-        } else if (valueTypeId == null) {
-            if (accountCode == null &&
-                    costCenterNumber == null) {
-                mappings = service.getByMapping(mapped);
-            } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        } else if (accountCode == null) {
-            if (costCenterNumber == null) {
-                mappings = service.getByValueType(valueTypeId, mapped);
-            } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        } else if (costCenterNumber == null) {
-            mappings = service.getByAccountType(valueTypeId, accountCode, mapped);
         } else {
-            mappings = service.getByCostCenterAccountType(valueTypeId,
-                    accountCode,
-                    costCenterNumber,
-                    mapped);
+            if (accountCode == null) {
+                if (costCenterNumber == null) {
+                    mappings = service.getByValueType(valueTypeId, mapped);
+                } else {
+                    mappings = service.getByCostCenterType(valueTypeId, costCenterNumber, mapped);
+                }
+            } else {
+                if (costCenterNumber == null) {
+                    mappings = service.getByAccountType(valueTypeId, accountCode, mapped);
+                } else {
+                    mappings = service.getByCostCenterAccountType(valueTypeId,
+                            accountCode,
+                            costCenterNumber,
+                            mapped);
+                }
+            }
         }
 
         List<MappingTableRow> mappingTableRows = new ArrayList<>();

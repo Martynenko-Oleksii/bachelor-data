@@ -49,4 +49,36 @@ public interface GlRpMappingRepository extends CrudRepository<GlRpMapping, Integ
     List<GlRpMapping> getGlRpMappingByValueTypeAndAccountAndCostCenterMapped(Integer valueType,
                                                                              String accountCode,
                                                                              String costCenterNumber);
+
+    @Query(value = "SELECT TOP 100 * FROM GL_RP_mappings WHERE department_element_id IS NOT NULL " +
+            "AND CC_number = ?1", nativeQuery = true)
+    List<GlRpMapping> getGlRpMappingByCostCenterMapped(String costCenterNumber);
+
+    @Query(value = "SELECT TOP 100 * FROM GL_RP_mappings WHERE department_element_id IS NULL " +
+            "AND CC_number = ?1", nativeQuery = true)
+    List<GlRpMapping> getGlRpMappingByCostCenterUnmapped(String costCenterNumber);
+
+    @Query(value = "SELECT TOP 100 * FROM GL_RP_mappings WHERE department_element_id IS NOT NULL " +
+            "AND account_code = ?1", nativeQuery = true)
+    List<GlRpMapping> getGlRpMappingByAccountMapped(String accountCode);
+
+    @Query(value = "SELECT TOP 100 * FROM GL_RP_mappings WHERE department_element_id IS NULL " +
+            "AND account_code = ?1", nativeQuery = true)
+    List<GlRpMapping> getGlRpMappingByAccountUnmapped(String accountCode);
+
+    @Query(value = "SELECT TOP 100 * FROM GL_RP_mappings WHERE department_element_id IS NOT NULL " +
+            "AND account_code = ?1 AND CC_number = ?2", nativeQuery = true)
+    List<GlRpMapping> getGlRpMappingByAccountAndCostCenterMapped(String accountCode, String costCenterNumber);
+
+    @Query(value = "SELECT TOP 100 * FROM GL_RP_mappings WHERE department_element_id IS NULL " +
+            "AND account_code = ?1 AND CC_number = ?2", nativeQuery = true)
+    List<GlRpMapping> getGlRpMappingByAccountAndCostCenterUnmapped(String accountCode, String costCenterNumber);
+
+    @Query(value = "SELECT TOP 100 * FROM GL_RP_mappings WHERE department_element_id IS NOT NULL " +
+            "AND valur_type_id = ?1 AND CC_number = ?2", nativeQuery = true)
+    List<GlRpMapping> getGlRpMappingByCostCenterAndValueTypeMapped(Integer valueTypeId, String costCenterNumber);
+
+    @Query(value = "SELECT TOP 100 * FROM GL_RP_mappings WHERE department_element_id IS NULL " +
+            "AND valur_type_id = ?1 AND CC_number = ?2", nativeQuery = true)
+    List<GlRpMapping> getGlRpMappingByCostCenterAndValueTypeUnmapped(Integer valueTypeId, String costCenterNumber);
 }
