@@ -58,7 +58,7 @@ public class GlRpMappingController {
                                                      @RequestParam(name = "facilityId") Integer facilityId) {
         List<Account> accounts;
 
-        if (valueTypeId == null) {
+        if (valueTypeId == 0) {
             if (mapped) {
                 accounts = accountService.getMapped(facilityId);
             } else {
@@ -78,8 +78,8 @@ public class GlRpMappingController {
                                                            @RequestParam(name = "facilityId") Integer facilityId) {
         List<CostCenter> costCenters;
 
-        if (valueTypeId == null) {
-            if (accountCode == null) {
+        if (valueTypeId == 0) {
+            if (accountCode.equals("")) {
                 if (mapped) {
                     costCenters = costCenterService.getMapped(facilityId);
                 } else {
@@ -89,7 +89,7 @@ public class GlRpMappingController {
                 costCenters = costCenterService.getByAccountCode(accountCode, facilityId, mapped);
             }
         } else {
-            if (accountCode == null) {
+            if (accountCode.equals("")) {
                 costCenters = costCenterService.getByValueTYpe(valueTypeId, facilityId, mapped);
             } else {
                 costCenters = costCenterService.getByAccountCodeValueTypeId(valueTypeId,
@@ -109,29 +109,29 @@ public class GlRpMappingController {
                                                              @RequestParam(name = "costCenter") String costCenterNumber) {
         List<GlRpMapping> mappings;
 
-        if (valueTypeId == null) {
-            if (accountCode == null) {
-                if (costCenterNumber == null) {
+        if (valueTypeId == 0) {
+            if (accountCode.equals("")) {
+                if (costCenterNumber.equals("")) {
                     mappings = service.getByMapping(mapped);
                 } else {
                     mappings = service.getByCostCenter(costCenterNumber, mapped);
                 }
             } else {
-                if (costCenterNumber == null) {
+                if (costCenterNumber.equals("")) {
                     mappings = service.getByAccount(accountCode, mapped);
                 } else {
                     mappings = service.getByCostCenterAccount(accountCode, costCenterNumber, mapped);
                 }
             }
         } else {
-            if (accountCode == null) {
-                if (costCenterNumber == null) {
+            if (accountCode.equals("")) {
+                if (costCenterNumber.equals("")) {
                     mappings = service.getByValueType(valueTypeId, mapped);
                 } else {
                     mappings = service.getByCostCenterType(valueTypeId, costCenterNumber, mapped);
                 }
             } else {
-                if (costCenterNumber == null) {
+                if (costCenterNumber.equals("")) {
                     mappings = service.getByAccountType(valueTypeId, accountCode, mapped);
                 } else {
                     mappings = service.getByCostCenterAccountType(valueTypeId,
