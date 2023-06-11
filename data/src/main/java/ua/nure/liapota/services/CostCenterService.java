@@ -19,16 +19,48 @@ public class CostCenterService extends EntityService<CostCenter, String, CostCen
         return repository.getCostCentersByFacilityID(id);
     }
 
-    public List<CostCenter> getByAccountCode(Integer valueTypeId,
+    public List<CostCenter> getMapped(Integer id) {
+        return repository.getCostCentersMapped(id);
+    }
+
+    public List<CostCenter> getByAccountCodeValueTypeId(Integer valueTypeId,
                                              String accountCode,
                                              Integer facilityId,
                                              boolean mapped) {
         List<CostCenter> costCenters;
 
         if (mapped) {
-            costCenters = repository.getCostCentersByAccountCodeMapped(accountCode, valueTypeId, facilityId);
+            costCenters = repository.getCostCentersByAccountCodeValueTypeIdMapped(accountCode, valueTypeId, facilityId);
         } else {
-            costCenters = repository.getCostCentersByAccountCodeUnmapped(accountCode, valueTypeId, facilityId);
+            costCenters = repository.getCostCentersByAccountCodeValueTypeIdUnmapped(accountCode, valueTypeId, facilityId);
+        }
+
+        return costCenters;
+    }
+
+    public List<CostCenter> getByAccountCode(String accountCode,
+                                             Integer facilityId,
+                                             boolean mapped) {
+        List<CostCenter> costCenters;
+
+        if (mapped) {
+            costCenters = repository.getCostCentersByAccountCodeMapped(accountCode, facilityId);
+        } else {
+            costCenters = repository.getCostCentersByAccountCodeUnmapped(accountCode, facilityId);
+        }
+
+        return costCenters;
+    }
+
+    public List<CostCenter> getByValueTYpe(Integer valueType,
+                                             Integer facilityId,
+                                             boolean mapped) {
+        List<CostCenter> costCenters;
+
+        if (mapped) {
+            costCenters = repository.getCostCentersByValueTypeIdMapped(valueType, facilityId);
+        } else {
+            costCenters = repository.getCostCentersByValueTypeIdUnmapped(valueType, facilityId);
         }
 
         return costCenters;

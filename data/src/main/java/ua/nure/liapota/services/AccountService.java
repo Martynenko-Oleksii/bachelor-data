@@ -18,6 +18,10 @@ public class AccountService extends EntityService<Account, String, AccountReposi
         return repository.getAccountsByFacilityID(id);
     }
 
+    public List<Account> getMapped(Integer facilityId) {
+        return repository.getAccountsByFacilityIDMapped(facilityId);
+    }
+
     public List<Account> getByValueType(Integer valueTypeId, Integer facilityId, boolean mapped) {
         List<Account> accounts;
 

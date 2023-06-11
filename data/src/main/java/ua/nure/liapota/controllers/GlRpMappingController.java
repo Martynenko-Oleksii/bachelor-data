@@ -56,7 +56,19 @@ public class GlRpMappingController {
     public ResponseEntity<List<Account>> getAccounts(@RequestParam(name = "valueTypeId") Integer valueTypeId,
                                                      @RequestParam(name = "mapped") boolean mapped,
                                                      @RequestParam(name = "facilityId") Integer facilityId) {
-        return new ResponseEntity<>(accountService.getByValueType(valueTypeId, facilityId, mapped), HttpStatus.OK);
+        List<Account> accounts;
+
+        if (valueTypeId == null) {
+            if (mapped) {
+                accounts = accountService.getMapped(facilityId);
+            } else {
+                accounts = accountService.getByFacilityId(facilityId);
+            }
+        } else {
+            accounts = accountService.getByValueType(valueTypeId, facilityId, mapped);
+        }
+
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
     @GetMapping("/costCenters")
@@ -64,10 +76,30 @@ public class GlRpMappingController {
                                                            @RequestParam(name = "mapped") boolean mapped,
                                                            @RequestParam(name = "code") String accountCode,
                                                            @RequestParam(name = "facilityId") Integer facilityId) {
-        return new ResponseEntity<>(costCenterService.getByAccountCode(valueTypeId,
-                accountCode,
-                facilityId,
-                mapped), HttpStatus.OK);
+        List<CostCenter> costCenters;
+
+        if (valueTypeId == null) {
+            if (accountCode == null) {
+                if (mapped) {
+                    costCenters = costCenterService.getMapped(facilityId);
+                } else {
+                    costCenters = costCenterService.getByFacility(facilityId);
+                }
+            } else {
+                costCenters = costCenterService.getByAccountCode(accountCode, facilityId, mapped);
+            }
+        } else {
+            if (accountCode == null) {
+                costCenters = costCenterService.getByValueTYpe(valueTypeId, facilityId, mapped);
+            } else {
+                costCenters = costCenterService.getByAccountCodeValueTypeId(valueTypeId,
+                        accountCode,
+                        facilityId,
+                        mapped);
+            }
+        }
+
+        return new ResponseEntity<>(costCenters, HttpStatus.OK);
     }
 
     @GetMapping("/mappings")
